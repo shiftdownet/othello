@@ -2,29 +2,43 @@
 from Othello.Cell import Cell
 
 class Board():
+    A = 1
+    B = 2
+    C = 3
+    D = 4
+    E = 5
+    F = 6
+    G = 7
+    H = 8
+    
+    SENTINEL_SIZE = 1
+    BOARD_SIZE    = 8 + SENTINEL_SIZE * 2
+    BOARD_MIN = 1
+    BOARD_MAX = 8
+
     def __init__(self):
-        self.__cells = [ [ Cell() for i in range(8 + 2) ] for j in range(8 + 2) ] # It includes sentinel
+        self.__cells = [ [ Cell() for i in range( Board.BOARD_SIZE ) ] for j in range( Board.BOARD_SIZE ) ] # It includes sentinel
         self.__x = 0
         self.__y = 0
         self.__offsetX = 0
         self.__offsetY = 0
-        self.at(4,4).access().put(Cell.BLACK)
-        self.at(4,5).access().put(Cell.WHITE)
-        self.at(5,4).access().put(Cell.WHITE)
-        self.at(5,5).access().put(Cell.BLACK)
+        self.at(Board.D,4).access().put(Cell.BLACK)
+        self.at(Board.D,5).access().put(Cell.WHITE)
+        self.at(Board.E,4).access().put(Cell.WHITE)
+        self.at(Board.E,5).access().put(Cell.BLACK)
 
         self.blackDisc = 0
         self.whiteDisc = 0
         self.count()
 
-    def at(self, y, x):
+    def at(self, x, y):
         self.__offsetX = 0
         self.__offsetY = 0
         self.__x = x
         self.__y = y
         return self
 
-    def offset(self, y, x):
+    def offset(self, x, y):
         self.__offsetX += x
         self.__offsetY += y
         return self
@@ -39,7 +53,7 @@ class Board():
     def isValidRange(self):
         y = self.__y + self.__offsetY
         x = self.__x + self.__offsetX
-        return True if ( 1 <= x <= 8) and ( 1 <= y <= 8) else False
+        return True if ( Board.BOARD_MIN <= x <= Board.BOARD_MAX ) and ( Board.BOARD_MIN <= y <= Board.BOARD_MAX ) else False
 
     def put(self, discType):
         totalFlipCount = 0
@@ -52,23 +66,23 @@ class Board():
 
                 # There are reverse side discs.
                 laneFlipCount = 0
-                while self.offset( direction["y"] * (laneFlipCount+1),
-                                   direction["x"] * (laneFlipCount+1) ).isBackOf(discType):
+                while self.offset( direction["x"] * (laneFlipCount+1),
+                                   direction["y"] * (laneFlipCount+1) ).isBackOf(discType):
                     laneFlipCount += 1
 
                 # At least one.
                 if laneFlipCount != 0:
 
                     # Finally, there is the same disc as owns.
-                    if self.offset( direction["y"] * (laneFlipCount+1),
-                                    direction["x"] * (laneFlipCount+1) ).isSameAs(discType):
+                    if self.offset( direction["x"] * (laneFlipCount+1),
+                                    direction["y"] * (laneFlipCount+1) ).isSameAs(discType):
                         totalFlipCount += laneFlipCount
 
                         # actually flip
                         while laneFlipCount > 0:
                             laneFlipCount -= 1
-                            self.offset( direction["y"] * (laneFlipCount+1),
-                                         direction["x"] * (laneFlipCount+1) ).flip()
+                            self.offset( direction["x"] * (laneFlipCount+1),
+                                         direction["y"] * (laneFlipCount+1) ).flip()
 
                         # put a disc
                         self.access().put(discType)
@@ -88,16 +102,16 @@ class Board():
 
                 # There are reverse side discs.
                 laneFlipCount = 0
-                while self.offset( direction["y"] * (laneFlipCount+1),
-                                   direction["x"] * (laneFlipCount+1) ).isBackOf(discType):
+                while self.offset( direction["x"] * (laneFlipCount+1),
+                                   direction["y"] * (laneFlipCount+1) ).isBackOf(discType):
                     laneFlipCount += 1
 
                 # At least one.
                 if laneFlipCount != 0:
 
                     # Finally, there is the same disc as owns.
-                    if self.offset( direction["y"] * (laneFlipCount+1),
-                                    direction["x"] * (laneFlipCount+1) ).isSameAs(discType):
+                    if self.offset( direction["x"] * (laneFlipCount+1),
+                                    direction["y"] * (laneFlipCount+1) ).isSameAs(discType):
                         totalFlipCount += laneFlipCount
 
         return totalFlipCount
