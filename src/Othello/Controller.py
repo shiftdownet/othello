@@ -4,7 +4,11 @@ import copy
 
 from .Cell import Cell
 from .Board import Board
-from . import Agent
+import Agent
+
+from termcolor import colored, cprint
+import colorama
+colorama.init()
 
 class Controller():
     def __init__(self):
@@ -12,22 +16,18 @@ class Controller():
         self.boards.append(Board())
 
         self.agent = {}
-        self.agent[Cell.WHITE] = Agent.JudgeByPosition( Agent.MinimizeOpenness(Agent.StdAgent(Cell.WHITE), 1), 1)
-        self.agent[Cell.BLACK] = Agent.JudgeByPosition( Agent.MinimizeOpenness(Agent.StdAgent(Cell.BLACK), 1), 1)
-        self.player = Cell.BLACK
+        self.agent[Cell.WHITE] = self.createAgent( Cell.WHITE, int(input("white level:")) )
+        self.agent[Cell.BLACK] = self.createAgent( Cell.BLACK, int(input("black level:")) )
+        self.player = Cell.WHITE
 
     def main(self):
         passedCount = 0
         while passedCount < 2:
-            print("------")
-            self.showBoard(self.boards[-1])
-            input()
-
             cases = self.possibleCases()
 
             if len(cases) != 0:
                 scoringCases  = self.agent[self.player].evaluate(cases)
-                print(scoringCases)
+                print("score:",scoringCases)
                 maxScoreCases = [ cases[index] for index, value in enumerate(scoringCases) if value == max(scoringCases) ]
                 self.boards.append(random.choice(maxScoreCases))
 
@@ -38,27 +38,72 @@ class Controller():
 
             self.player *= -1
 
-        # self.showBoard(self.boards[-1])
 
     def possibleCases(self):
+
         cases = []
+        index = 0
+        print("")
         for y in range(1, 9):
             for x in range(1, 9):
                 newboard = copy.deepcopy(self.boards[-1])
-                if newboard.at(y, x).put(self.player) != 0:
+                if newboard.at(x, y).put(self.player) != 0:
+                    print(colored("{0:<2}".format(index), "yellow", "on_green"), end="")
+                    index += 1
                     cases.append(newboard)
+                else:
+                    self.showCell(self.boards[-1].at(x, y).get())
+            print("")
         return cases
 
-    def showBoard(self, board):
-        if self.player == Cell.BLACK:
-            print(" W :", board.whiteDisc)
-            print("[B ]:", board.blackDisc)
-        else:
-            print("[W]:", board.whiteDisc)
-            print(" B :", board.blackDisc)
+    def showCell(self,cell):
+        STR_EMPTY = "□"
+        STR_BLACK = "●"
+        STR_WHITE = "●"
 
-        for i in range(1, 9):
-            for j in range(1, 9):
-                print(["・", "B ", "W "][board.at(i, j).get()], end="")
-            print("")
-        print("")
+        if cell == Cell.EMPTY:
+            print(colored(STR_EMPTY, "white", "on_green"), end="")
+
+        elif cell == Cell.BLACK:
+            print(colored(STR_BLACK, "grey", "on_green"), end="")
+
+        else:
+            print(colored(STR_BLACK, "white", "on_green"), end="")
+
+    def createAgent(self, discType, level):
+        if level == 0:
+            return Agent.Player(discType)
+
+        if level >= 1:
+            agent = Agent.StdAgent(discType)
+
+        if level == 2:
+            agent = Agent.Decorator_MaximizeOwnDisc(agent, 10)
+
+        if level >= 3:
+            agent = Agent.Decorator_JudgeByPosition(agent, 5)
+
+        if level >= 4:
+            agent = Agent.Decorator_EvaluateFlipCount(agent, 3)
+
+        if level >= 5:
+            agent = Agent.Decorator_MinimizeEnemyMoves(agent, 10)
+            agent = Agent.Decorator_MaximizeOwnMoves(agent, 15)
+
+        if level >= 6:
+            agent = Agent.Decorator_MinimizeOpenness(agent, 15)
+
+        if level >= 7:
+            # agent = Agent.Decorator_EvaluateWing(agent, 10)
+            pass
+
+        if level >= 8:
+            # agent = Agent.Decorator_EvaluateStoner(agent, 10)
+            pass
+
+        if level >= 9:
+            # agent = Agent.Decorator_EvenOddTheory(agent, 10)
+            pass
+
+        return agent
+

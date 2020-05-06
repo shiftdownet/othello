@@ -1,13 +1,14 @@
 
 
 from Othello.Cell import Cell
-from .AgentDecorator import AgentDecorator
+from .Decorator import Decorator
 
 
-class MinimizeOwnDisc(AgentDecorator):
+class Decorator_MinimizeOwnDisc(Decorator):
     def _scoring(self, case):
         score = {Cell.BLACK: case.blackDisc,
                  Cell.WHITE: case.whiteDisc}[self._discType] * -1
         return (self._rate * score) + self._agent._scoring(case)
 
-
+    def _prepare(self, cases):
+        self._agent._prepare(cases)

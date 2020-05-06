@@ -1,8 +1,8 @@
 
 from Othello.Cell import Cell
-from .AgentDecorator import AgentDecorator
+from .Decorator import Decorator
 
-class MinimizeOpenness(AgentDecorator):
+class Decorator_MinimizeOpenness(Decorator):
     def _scoring(self, case):
         myOpenness = 0
         enOpenness = 0
@@ -19,5 +19,5 @@ class MinimizeOpenness(AgentDecorator):
         score = (enOpenness - myOpenness)
         return (self._rate * score) + self._agent._scoring(case)
 
-
-
+    def _prepare(self, cases):
+        self._agent._prepare(cases)

@@ -1,7 +1,9 @@
 from .StdAgent import StdAgent
-from .JudgeByPosition import JudgeByPosition
-from .MaximizeOwnDisc import MaximizeOwnDisc
-from .MinimizeEnemyMoves import MinimizeEnemyMoves
-from .MinimizeOpenness import MinimizeOpenness
-from .MinimizeOwnDisc import MinimizeOwnDisc
-
+from .Player import Player
+from .Decorator_JudgeByPosition import Decorator_JudgeByPosition
+from .Decorator_MaximizeOwnDisc import Decorator_MaximizeOwnDisc
+from .Decorator_MinimizeOwnDisc import Decorator_MinimizeOwnDisc
+from .Decorator_MinimizeEnemyMoves import Decorator_MinimizeEnemyMoves
+from .Decorator_MinimizeOpenness import Decorator_MinimizeOpenness
+from .Decorator_EvaluateFlipCount import Decorator_EvaluateFlipCount
+from .Decorator_MaximizeOwnMoves import Decorator_MaximizeOwnMoves

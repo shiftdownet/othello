@@ -1,15 +1,16 @@
 from .IAgent import IAgent
 
-class StdAgent(IAgent):
+class Player(IAgent):
     def __init__(self, discType):
         self._discType = discType
 
     def evaluate(self, cases):
         self._prepare( cases )
 
-        scores = []
-        for case in cases:
-            scores.append(self._scoring(case))
+        scores = [ 0 for case in cases ]
+
+        scores[ int(input('> ')) ] = 1
+
         return scores
 
     def _scoring(self, case):
