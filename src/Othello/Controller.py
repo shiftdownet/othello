@@ -13,9 +13,11 @@ class Controller():
         self.boards.append( Board() )
 
         self.agent = {}
-        self.agent[Cell.BLACK] = AgentMinOpenness( Cell.BLACK )
-        self.agent[Cell.WHITE] = AgentDecreaseEnemyCase( Cell.WHITE )
-        self.player = self.agent[Cell.WHITE].discType
+        self.agent[Cell.WHITE] = JudgeByPosition( MinimizeOpenness( StdAgent(Cell.WHITE), 1 ), 1 )
+        self.agent[Cell.BLACK] = JudgeByPosition( MaximizeOwnDisc( StdAgent(Cell.BLACK), 1 ), 1 )
+#        self.agent[Cell.BLACK] = MaximizeOwnDisc( StdAgent(Cell.BLACK), 1 )
+#        self.agent[Cell.BLACK] = StdAgent(Cell.BLACK)
+        self.player = Cell.BLACK
 
     def main(self):
         passedCount = 0
@@ -34,11 +36,19 @@ class Controller():
                 maxScore = -65535
                 scoingCases = []
                 for case in cases:
-                    score = self.agent[self.player].scoring( case )
+                    self.agent[self.player].scoring( case )
+                    score = self.agent[self.player].getScore()
+                    #print(score)
                     scoingCases.append({"score":score, "case":case })
                     if maxScore < score:
                         maxScore = score
-                
+                if 0:
+                    print("### start ###")
+                    for case in scoingCases:
+                        print("score:", case["score"])
+                        self.showBoard(case["case"])
+                    print("### end ###")
+
                 maxScoreCases = [ case["case"] for case in scoingCases if maxScore == case["score"] ]
 
                 self.boards.append( random.choice( maxScoreCases ) )

@@ -1,9 +1,12 @@
 
 
 class Cell():
+    def FLIP( discType ):
+        return discType * -1
+
     EMPTY = 0
     BLACK = 1
-    WHITE = BLACK * -1
+    WHITE = FLIP(BLACK)
 
     def __init__(self):
         self.__value = self.EMPTY
@@ -16,7 +19,7 @@ class Cell():
         return self.__value
 
     def flip(self):
-        self.__value *= -1
+        self.__value = Cell.FLIP( self.__value )
 
     def isEmpty(self):
         return self.__value == self.EMPTY
