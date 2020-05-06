@@ -1,5 +1,5 @@
 
-from Othello.Cell import Cell
+from .Cell import Cell
 
 class Board():
     A = 1

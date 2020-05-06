@@ -1,11 +1,10 @@
 
-
+import random
 import copy
 
-from Othello.Agent.Agent import *
-from Othello.Cell import Cell
-from Othello.Board import Board
-
+from .Cell import Cell
+from .Board import Board
+from . import Agent
 
 class Controller():
     def __init__(self):
@@ -13,11 +12,8 @@ class Controller():
         self.boards.append(Board())
 
         self.agent = {}
-#        self.agent[Cell.WHITE] = MinimizeOpenness(StdAgent(Cell.WHITE), 1)
-
-        self.agent[Cell.WHITE] = JudgeByPosition( MinimizeOpenness(StdAgent(Cell.WHITE), 1), 1)
-        self.agent[Cell.BLACK] = StdAgent(Cell.BLACK)
-#        self.agent[Cell.BLACK] = JudgeByPosition( MaximizeOwnDisc(StdAgent(Cell.BLACK), 1), 1)
+        self.agent[Cell.WHITE] = Agent.JudgeByPosition( Agent.MinimizeOpenness(Agent.StdAgent(Cell.WHITE), 1), 1)
+        self.agent[Cell.BLACK] = Agent.JudgeByPosition( Agent.MinimizeOpenness(Agent.StdAgent(Cell.BLACK), 1), 1)
         self.player = Cell.BLACK
 
     def main(self):
