@@ -1,7 +1,7 @@
 
 
 from Othello.Cell import Cell
-from Othello.Agent.AgentDecorator import AgentDecorator
+from .AgentDecorator import AgentDecorator
 
 class MaximizeOwnDisc(AgentDecorator):
     def _scoring(self, case):

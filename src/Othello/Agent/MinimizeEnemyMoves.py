@@ -1,5 +1,5 @@
 
-from Othello.Agent.AgentDecorator import AgentDecorator
+from .AgentDecorator import AgentDecorator
 
 class MinimizeEnemyMoves(AgentDecorator):
     def _scoring(self, case):

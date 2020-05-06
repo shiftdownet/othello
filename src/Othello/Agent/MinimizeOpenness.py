@@ -1,6 +1,6 @@
 
 from Othello.Cell import Cell
-from Othello.Agent.AgentDecorator import AgentDecorator
+from .AgentDecorator import AgentDecorator
 
 class MinimizeOpenness(AgentDecorator):
     def _scoring(self, case):
