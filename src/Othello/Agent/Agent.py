@@ -5,58 +5,67 @@ import random
 
 
 class IAgent():
-    def getScore(self):
+    def evaluate(self, cases):
         pass
 
-    def scoring(self, case):
+    def _scoring(self, case):
         pass
 
 
 class StdAgent(IAgent):
     def __init__(self, discType):
-        self._score = 0
         self._discType = discType
 
-    def getScore(self):
-        return self._score
+    def evaluate(self, cases):
+        scores = []
+        for case in cases:
+            scores.append(self._scoring(case))
+        return scores
 
-    def scoring(self, case):
-        pass
+    def _scoring(self, case):
+        return 0
 
 
 class AgentDecorator(IAgent):
     def __init__(self, agent, rate):
-        self._score = 0
         self._discType = agent._discType
-
         self._agent = agent
         self._rate = rate
 
-    def getScore(self):
-        return self._score + self._agent._score
+    def evaluate(self, cases):
+        scores = []
+        for case in cases:
+            scores.append(self._scoring(case))
+        return scores
 
-    def scoring(self, case):
-        self._agent.scoring(case)
+    def _scoring(self, case):
+        self._agent._scoring(case)
+
+
+class ManualInput(AgentDecorator):
+    def evaluate(self, cases):
+        scores = []
+        for case in cases:
+            scores.append(self._scoring(case))
+        return scores
 
 
 class MaximizeOwnDisc(AgentDecorator):
-    def scoring(self, case):
+    def _scoring(self, case):
         score = {Cell.BLACK: case.blackDisc,
                  Cell.WHITE: case.whiteDisc}[self._discType]
-        self._score = self._rate * score
-        self._agent.scoring(case)
+        return (self._rate * score) + self._agent._scoring(case)
 
 
 class MinimizeOwnDisc(AgentDecorator):
-    def scoring(self, case):
+    def _scoring(self, case):
         score = {Cell.BLACK: case.blackDisc,
                  Cell.WHITE: case.whiteDisc}[self._discType] * -1
-        self._score = self._rate * score
-        self._agent.scoring(case)
+        return (self._rate * score) + self._agent._scoring(case)
 
 
 class MinimizeEnemyMoves(AgentDecorator):
-    def scoring(self, case):
+    def _scoring(self, case):
         placeableCount = 0
         for y in range(1, 9):
             for x in range(1, 9):
@@ -64,12 +73,12 @@ class MinimizeEnemyMoves(AgentDecorator):
                     placeableCount += 1
 
         score = (placeableCount * -1)
-        self._score = self._rate * score
-        self._agent.scoring(case)
+
+        return (self._rate * score) + self._agent._scoring(case)
 
 
 class MinimizeOpenness(AgentDecorator):
-    def scoring(self, case):
+    def _scoring(self, case):
         myOpenness = 0
         enOpenness = 0
         for y in range(1, 9):
@@ -83,12 +92,11 @@ class MinimizeOpenness(AgentDecorator):
                                 enOpenness += 1
 
         score = (enOpenness - myOpenness)
-        self._score = self._rate * score
-        self._agent.scoring(case)
+        return (self._rate * score) + self._agent._scoring(case)
 
 
 class JudgeByPosition(AgentDecorator):
-    def scoring(self, case):
+    def _scoring(self, case):
         scoreBoard = \
             [
                 [0,   0,   0,   0,   0,   0,   0,   0,   0,   0],
@@ -109,5 +117,4 @@ class JudgeByPosition(AgentDecorator):
                 if case.at(y, x).get() == self._discType:
                     score += scoreBoard[y][x]
 
-        self._score = self._rate * score
-        self._agent.scoring(case)
+        return (self._rate * score) + self._agent._scoring(case)
