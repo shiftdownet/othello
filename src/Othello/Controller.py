@@ -4,7 +4,7 @@ import copy
 
 from .Cell import Cell
 from .Board import Board
-from . import Agent
+import Agent
 
 class Controller():
     def __init__(self):
