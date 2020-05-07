@@ -9,7 +9,7 @@ class Decorator_EvaluateFlipCount(Decorator):
     def _scoring(self, case):
         if self._step < 40:
             score = Decorator_MinimizeOwnDisc(self._agent, 1)._scoring(case)
-        elif self._step < 55:
+        elif self._step < 60:
             score = 0
         else:
             score = Decorator_MaximizeOwnDisc(self._agent, 1)._scoring(case)

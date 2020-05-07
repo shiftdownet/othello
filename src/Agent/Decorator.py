@@ -15,7 +15,7 @@ class Decorator(IAgent):
         return scores
 
     def _scoring(self, case):
-        self._agent._scoring(case)
+        return self._agent._scoring(case)
 
     def _prepare(self, cases):
         pass

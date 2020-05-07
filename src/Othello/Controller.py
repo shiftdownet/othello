@@ -18,11 +18,17 @@ class Controller():
         self.agent = {}
         self.agent[Cell.WHITE] = self.createAgent( Cell.WHITE, int(input("white level:")) )
         self.agent[Cell.BLACK] = self.createAgent( Cell.BLACK, int(input("black level:")) )
-        self.player = Cell.WHITE
+        self.player = Cell.BLACK
 
     def main(self):
         passedCount = 0
         while passedCount < 2:
+            print("---------------------")
+            print(colored("●", "white", "on_green"), end="")
+            print(self.boards[-1].whiteDisc)
+            print(colored("●", "grey", "on_green"), end="")
+            print(self.boards[-1].blackDisc)
+
             cases = self.possibleCases()
 
             if len(cases) != 0:
@@ -43,8 +49,9 @@ class Controller():
 
         cases = []
         index = 0
-        print("")
+        print("  A B C D E F G H")
         for y in range(1, 9):
+            print(y, end="")
             for x in range(1, 9):
                 newboard = copy.deepcopy(self.boards[-1])
                 if newboard.at(x, y).put(self.player) != 0:
@@ -77,31 +84,40 @@ class Controller():
         if level >= 1:
             agent = Agent.StdAgent(discType)
 
-        if level == 2:
-            agent = Agent.Decorator_MaximizeOwnDisc(agent, 10)
+        if level >= 2:
+            agent = Agent.Decorator_AvoidLosingAllDisc(agent, 500)
 
-        if level >= 3:
-            agent = Agent.Decorator_JudgeByPosition(agent, 5)
+        if level == 3:
+            agent = Agent.Decorator_MaximizeOwnDisc(agent, 1)
 
         if level >= 4:
-            agent = Agent.Decorator_EvaluateFlipCount(agent, 3)
+            agent = Agent.Decorator_JudgeByPosition(agent, 1)
 
         if level >= 5:
-            agent = Agent.Decorator_MinimizeEnemyMoves(agent, 10)
-            agent = Agent.Decorator_MaximizeOwnMoves(agent, 15)
+            agent = Agent.Decorator_AvoidPutOnX(agent, 100)
+            agent = Agent.Decorator_AvoidPutOnRiskyC(agent, 100)
+            agent = Agent.Decorator_AvoidRobbedCorner(agent, 100)
+            agent = Agent.Decorator_AimAtCorner(agent,100)
 
         if level >= 6:
-            agent = Agent.Decorator_MinimizeOpenness(agent, 15)
+            agent = Agent.Decorator_EvaluateFlipCount(agent, 10)
 
         if level >= 7:
+            agent = Agent.Decorator_MinimizeEnemyMoves(agent, 20)
+            agent = Agent.Decorator_MaximizeOwnMoves(agent, 25)
+
+        if level >= 8:
+            agent = Agent.Decorator_MinimizeOpenness(agent, 30)
+
+        if level >= 9:
             # agent = Agent.Decorator_EvaluateWing(agent, 10)
             pass
 
-        if level >= 8:
+        if level >= 10:
             # agent = Agent.Decorator_EvaluateStoner(agent, 10)
             pass
 
-        if level >= 9:
+        if level >= 11:
             # agent = Agent.Decorator_EvenOddTheory(agent, 10)
             pass
 

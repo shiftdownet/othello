@@ -22,10 +22,10 @@ class Board():
         self.__y = 0
         self.__offsetX = 0
         self.__offsetY = 0
-        self.at(Board.D,4).access().put(Cell.BLACK)
-        self.at(Board.D,5).access().put(Cell.WHITE)
-        self.at(Board.E,4).access().put(Cell.WHITE)
-        self.at(Board.E,5).access().put(Cell.BLACK)
+        self.at(Board.D,4).access().put(Cell.WHITE)
+        self.at(Board.D,5).access().put(Cell.BLACK)
+        self.at(Board.E,4).access().put(Cell.BLACK)
+        self.at(Board.E,5).access().put(Cell.WHITE)
 
         self.blackDisc = 0
         self.whiteDisc = 0
